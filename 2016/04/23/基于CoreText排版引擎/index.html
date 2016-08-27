@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>基于CoreText排版引擎基础篇 | MkilTechBlog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="CoreText简介
+CoreText是用于处理文字和字体的底层技术。它直接和 Core Graphics (又被称为Quartz)打交道。Quartz是一个2D图形渲染引擎，能够处理OSX 和 iOS中的图形显示。
+Quartz 能够直接处理字体（font）和字形（glyphs）,将文字渲染到界面上，它是基础库中唯一能够处理字形的模块。因此，CoreText为了排版，需要将显示的文本内容、位置、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于CoreText排版引擎基础篇">
+<meta property="og:url" content="http://yoursite.com/2016/04/23/基于CoreText排版引擎/index.html">
+<meta property="og:site_name" content="MkilTechBlog">
+<meta property="og:description" content="CoreText简介
+CoreText是用于处理文字和字体的底层技术。它直接和 Core Graphics (又被称为Quartz)打交道。Quartz是一个2D图形渲染引擎，能够处理OSX 和 iOS中的图形显示。
+Quartz 能够直接处理字体（font）和字形（glyphs）,将文字渲染到界面上，它是基础库中唯一能够处理字形的模块。因此，CoreText为了排版，需要将显示的文本内容、位置、">
+<meta property="og:image" content="http://mkiltech.com/image/16424/coretext_arch.png">
+<meta property="og:image" content="http://mkiltech.com/image/16424/ct3.png">
+<meta property="og:image" content="http://mkiltech.com/image/16424/ct4.png">
+<meta property="og:updated_time" content="2016-04-24T08:19:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于CoreText排版引擎基础篇">
+<meta name="twitter:description" content="CoreText简介
+CoreText是用于处理文字和字体的底层技术。它直接和 Core Graphics (又被称为Quartz)打交道。Quartz是一个2D图形渲染引擎，能够处理OSX 和 iOS中的图形显示。
+Quartz 能够直接处理字体（font）和字形（glyphs）,将文字渲染到界面上，它是基础库中唯一能够处理字形的模块。因此，CoreText为了排版，需要将显示的文本内容、位置、">
+<meta name="twitter:image" content="http://mkiltech.com/image/16424/coretext_arch.png">
+  
+    <link rel="alternative" href="/atom.xml" title="MkilTechBlog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mkiltech.com/image/icon.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Mkil</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Mkil</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://mkiltech.com/image/icon.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Mkil</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-基于CoreText排版引擎" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/23/基于CoreText排版引擎/" class="article-date">
+  	<time datetime="2016-04-23T15:01:41.000Z" itemprop="datePublished">2016-04-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基于CoreText排版引擎基础篇
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CoreText简介"><a href="#CoreText简介" class="headerlink" title="CoreText简介"></a>CoreText简介</h1><hr>
+<p>CoreText是用于处理文字和字体的底层技术。它直接和 Core Graphics (又被称为Quartz)打交道。Quartz是一个2D图形渲染引擎，能够处理OSX 和 iOS中的图形显示。</p>
+<p>Quartz 能够直接处理字体（font）和字形（glyphs）,将文字渲染到界面上，它是基础库中唯一能够处理字形的模块。因此，CoreText为了排版，需要将显示的文本内容、位置、字体、字形直接传递给Quartz。相  比其他UI组件，由于CoreText直接和Quartz来交互，所以它具有高速的排版效果。</p>
+<p>下图是CoreTex的架构图，可以看到，CoreText处于非常底层的位置，上层的UI控件（包括UILabel，UITextField以及UITextView）和UIWebView都是基于CoreText来实现的。</p>
+<blockquote>
+<p>注意：这个是iOS7之后的架构图，在iOS7以前，并没有图中的Text KIt类，不过CoreText仍然是处于 在最底层直接和Core Graphics打交道的模块。</p>
+</blockquote>
+<p><img src="http://mkiltech.com/image/16424/coretext_arch.png" alt="CoreText架构图"></p>
+<p>UIWebView 也是处理复杂的文字排版的备选方案。对于排版，基于 CoreText 和基于 UIWebView相比，前者有以下好处：</p>
+<ul>
+<li>CoreText 占用的内存更少，渲染速度快，UIWebView占用的内存更多，渲染速度慢。</li>
+<li>CoreText 在渲染界面之前就可以精确地获得显示内容的高度（只要有了CTFrame即可），而UIWebView<br>只有在渲染出内容后，才能获得内容的高度（而且还需要用 JavaScript 代码来获取）</li>
+<li>CoreText 的 CTFrame 可以在后头线程渲染， UIWebView 的内容只能在主线程（UI线程）渲染。</li>
+<li>基于 CoreText 可以做更好的原生交互效果，交互效果可以更细腻。而 UIWebView 的交互效果都是用 JavaScript 来实现的，在交互效果上会有一些卡顿存在。例如，在 UIWebView 下，一个简单的按钮按下的效果，都无法做到原生按钮的即时和细腻的按下效果。</li>
+</ul>
+<p>当然，基于 CoreText 的排版方案也有一些劣势：</p>
+<ul>
+<li>CoreText 渲染出来的内容不能像 UIWebView 那样方便地支持内容的复制。</li>
+<li>基于 CoreText 来排版需要自己处理很多复杂的逻辑，例如需要自己处理图片与文字混排相关的逻辑，也需要自己实现链接点击操作的支持。</li>
+</ul>
+<p>通常，我们会基于JSON或XML模板， 来渲染内容的富文本界面，并且支持图文混排、各种字体效果设置、颜色设置、字号设置，图片支持点击，链接支持点击。</p>
+<h2 id="字符和字型-glyphs"><a href="#字符和字型-glyphs" class="headerlink" title="字符和字型(glyphs)"></a>字符和字型(glyphs)</h2><p>先来看看这张图：<br><img src="http://mkiltech.com/image/16424/ct3.png" alt="字符和字形"></p>
+<p>图中描述了一个字符和一个单词的空间结构，从图可以看到：</p>
+<pre><code>Origin：基线上最左侧的点
+Bounding box
+Ascent：上行高度，从baseLine到字体中最高
+Descent：下行高度，从baseLine到最深的字形底部
+Line gap：也就是leading，行间距
+Line height：等于ascent+descent+lineGap(leading 行间距)
+Baseline：基线
+</code></pre><h2 id="CoreText对象模型"><a href="#CoreText对象模型" class="headerlink" title="CoreText对象模型"></a>CoreText对象模型</h2><p>CoreText.framework 对象包括 Layout Objects 和 Font Objects。</p>
+<p><img src="http://mkiltech.com/image/16424/ct4.png" alt="字符和字形"></p>
+<p>Layout对象有：</p>
+<p>CTFramesetter 是CTFrame的生产工厂。<br>CTFrame 整体的画布，由行（CTLine）构成<br>CTLine 表示一行，每行可以由多个小方块（CTRun）构成，可以做更精细的排版<br>CTRun 是一组共享相同属性的字形的集合体。不能直接创建CTRun实例。</p>
+<h2 id="CoreText渲染文本一般步骤"><a href="#CoreText渲染文本一般步骤" class="headerlink" title="CoreText渲染文本一般步骤"></a>CoreText渲染文本一般步骤</h2><pre><code>- (void)drawRect:(CGRect)rect
+{
+    [super drawRect:rect];
+
+    // 步骤 1     获取上下文
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    // 步骤 2     坐标系上下翻转 CoreText &lt;==&gt; UIKit
+    //            CoreText坐标系同CoreGraphic,在UIKit中
+    //           渲染时需要翻转坐标系
+    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    // 步骤 3     创建绘制区域
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, self.bounds);
+
+    // 步骤 4     生产CTFrameRef
+    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:@&quot;Hello World!&quot;];
+    CTFramesetterRef framesetter =
+    CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+    CTFrameRef frame =
+    CTFramesetterCreateFrame(framesetter,
+                         CFRangeMake(0, [attString length]), path, NULL);
+
+    // 步骤 5
+    CTFrameDraw(frame, context);
+
+    // 步骤 6
+    CFRelease(frame);
+    CFRelease(path);
+    CFRelease(framesetter);
+}
+</code></pre><h2 id="CoreText数据结构和API"><a href="#CoreText数据结构和API" class="headerlink" title="CoreText数据结构和API"></a>CoreText数据结构和API</h2><p><strong>数据结构</strong><br>    CFAttributedStringRef<br>    CTFramesetterRef<br>    CTFrameRef<br>    CFRange<br>    CFArrayRef<br>    CFIndex</p>
+<p><strong>API</strong></p>
+<pre><code>CTFramesetterCreateWithAttributedString()   创建frameSetter  
+CTFramesetterCreateFrame()   通过frameSetter创建frame  
+CTFrameDraw()  在context中绘制frame
+
+CTFrameGetLines()   获得所有的CTLine对象  
+CTFrameGetLineOrigins(frame,range,originsPoint[])    获得每行的起始位置  
+CTFrameGetPath()  
+CTFrameGetVisibleStringRange()  
+CGPathGetBoundingBox()  得到占用的区域大小
+
+CTLineDraw()  
+CTLineGetGlyphRuns()   获得所有的runs  
+CTLineGetOffsetForStringIndex()   字符相对于x原点的偏移量，可以用来求一行字符的长度  
+CTLineGetStringIndexForPosition()  获取当前坐标点对应的字符串偏移  
+CTLineGetTypographicBounds()     获得一行CTLine 的bounds
+
+CTRunGetAttributes()  
+CTRunDelegateGetRefCon()   获得delegate的refCon值  
+CTRunGetTypographicBounds()   获得 CTRun 的bounds  
+CTRunDelegateCreate()    创建CTRun代理对象
+
+CFArrayGetCount(lines)  
+
+CTFontCreateWithName()   创建字体 CTFontRef  
+CTFontGetSymbolicTraits()  
+CTFontCreateCopyWithSymbolicTraits()  
+CTFontCopyPostScriptName()  
+</code></pre><p><strong>段落Style设置</strong></p>
+<pre><code>//段落样式设置类型
+CTParagraphStyleSetting (或者NSMutableParagraphStyle )  
+//创建一个段落样式，返回值类型是CTParagraphStyleRef
+CTParagraphStyleCreate()  
+//给attributeString设置属性
+CFAttributedStringSetAttribute(attributedString,range,kCTParagraphStyleAttributeName,value)  
+- addAttribute:kCTParagraphStyleAttributeName value:paragraphStyle range:range
+</code></pre><p>段落样式设置的值有：</p>
+<pre><code>Alignment   对其方式，一个枚举类型  
+FirstLineHeadIndent  设置行首缩进值  
+HeadIndent   整段头部缩进  
+TailIndent      整段尾部缩进  
+TabStops  
+LineBreakMode   换行模式，枚举值：wordWrapping，charWrapping一类的  
+LineHeightMultiple  行高设置  
+MaximumLineHeight  
+LineSpacing  行距  
+ParagraphSpacing  
+ParagraphSpacingBefore 段落间距  
+BaseWritingDirection   书写方向，左-》右 或 右-》左  
+MaximumLineSpacing  
+LineSpacingAdjustment  
+LineBoundsOptions  
+</code></pre><p>后续更新！！！</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="基于CoreText排版引擎" data-title="基于CoreText排版引擎基础篇" data-url="http://yoursite.com/2016/04/23/基于CoreText排版引擎/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Mkil
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
