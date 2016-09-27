@@ -98,7 +98,7 @@
 <meta property="og:image" content="http://i59.tinypic.com/suyt0o.jpg">
 <meta property="og:image" content="http://i61.tinypic.com/33m06er.jpg">
 <meta property="og:image" content="http://i67.tinypic.com/29vxt9w.jpg">
-<meta property="og:updated_time" content="2016-09-27T11:37:40.000Z">
+<meta property="og:updated_time" content="2016-09-27T11:40:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Parse的底层多线程处理思路：GCD高级用法">
 <meta name="twitter:description" content="【前言】从iOS7升到iOS8后，GCD 出现了一个重大的变化：在 iOS7 时，使用 GCD 的并行队列，  dispatch_async  最大开启的线程一直能控制在6、7条，线程数都是个位数，然而 iOS8后，最大线程数一度可以达到40条、50条。然而在文档上并没有对这一做法的目的进行介绍。
@@ -317,7 +317,6 @@
 <blockquote>
 <p> <code>GCD</code> 虽然能够实现暂停和终止，但开发还是灵活些好，那些 <code>NSOperation</code> 用起来方便的就直接用 <code>NSOperation</code> 的方式，不然苹果多包那一层不是蛋疼，包括文章里提到的 <code>iOS8</code> 后控制线程数的问题，不一定项目就一定要GCD一路到底。有时候需要支持一些高层级封装功能比如： <code>KVO</code> 时 <code>NSOperation</code> 还是有它的优势的。 <code>GCD</code> 反而是处理些比较简单的操作或者是较系统级的比如：监视进程或者监视文件夹内文件的变化之类的比较合适。</p>
 </blockquote>
-<p>（iOS开发学习交流群：541317935）</p>
 <p>第一篇的目的是通过解读 Parse 源码来展示GCD两个高级用法： <code>Dispatch Source</code> （派发源）和 <code>Dispatch Semaphore</code>  （信号量）。首先通过Parse 的“离线存储对象”操作，来介绍 <code>Dispatch Source</code> （派发源）；然后通过Parse 的单元测试中使用的技巧“强制把异步任务转换为同步任务来方便进行单元测试”来介绍<code>Dispatch Semaphore</code>  （信号量）。我已将思路浓缩为可运行的7个 Demo 中，详见仓库里的 Demo1到 Demo7。</p>
 <p>如果对 GCD 不太熟悉，请先读下<a href="http://mkiltech.com/blog/2016/09/gcd-base.html">《GCD 基础篇》</a>。</p>
 <h2 id="Parse-iOS-SDK介绍"><a href="#Parse-iOS-SDK介绍" class="headerlink" title="Parse-iOS-SDK介绍"></a>Parse-iOS-SDK介绍</h2><p> <a href="http://www.infoq.com/cn/news/2015/08/ios-weekly-ios841#rd" target="_blank" rel="external">《iOS开发周报：iOS 8.4.1 发布，iOS 8 时代谢幕》</a> 对 Facebook 旗下的 Parse有这样一段介绍：</p>
