@@ -124,7 +124,7 @@
 “任务”，在 GCD 里指的是">
 <meta property="og:image" content="http://mkiltech.com/images/GCD-Base/Serial-Queue-480x272.png">
 <meta property="og:image" content="http://mkiltech.com/images/GCD-Base/Concurrent-Queue-480x272.png">
-<meta property="og:updated_time" content="2016-09-27T11:15:08.000Z">
+<meta property="og:updated_time" content="2016-09-27T11:19:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD 基础篇">
 <meta name="twitter:description" content="GCD有四个概念：串行队列、并行队列、同步、异步四者。
@@ -385,11 +385,13 @@
 <td>全局队列</td>
 <td>隶属于并行队列</td>
 <td>不要与 barrier 栅栏方法搭配使用， barrier 只有与自定义的并行队列一起使用，才能让 barrier 达到我们所期望的栅栏功能。与 串行队列或者 global 队列 一起使用，barrier 的表现会和 dispatch_sync 方法一样。</td>
+<td>–</td>
 </tr>
 <tr>
 <td>主队列</td>
 <td>隶属于串行队列</td>
 <td>不能与 sync 同步方法搭配使用，会造成死循环</td>
+<td>–</td>
 </tr>
 </tbody>
 </table>
